@@ -8,10 +8,26 @@ services:
     dockerContext: ./backend
     healthCheckPath: /api/dashboard/summary
     envVars:
-      - key: DATABASE_URL
+      - key: DB_HOST
         fromDatabase:
           name: safety-wearable-db
-          property: connectionString
+          property: host
+      - key: DB_PORT
+        fromDatabase:
+          name: safety-wearable-db
+          property: port
+      - key: DB_NAME
+        fromDatabase:
+          name: safety-wearable-db
+          property: database
+      - key: SPRING_DATASOURCE_USERNAME
+        fromDatabase:
+          name: safety-wearable-db
+          property: user
+      - key: SPRING_DATASOURCE_PASSWORD
+        fromDatabase:
+          name: safety-wearable-db
+          property: password
       - key: CORS_ALLOWED_ORIGINS
         sync: false
       - key: MQTT_BROKER_URL
