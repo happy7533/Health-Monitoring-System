@@ -6,8 +6,6 @@ services:
     region: oregon
     dockerfilePath: ./backend/Dockerfile
     dockerContext: ./backend
-    dockerCommand: >-
-      sh -c 'SPRING_DATASOURCE_URL="jdbc:$DATABASE_URL" exec java -jar /app/app.jar'
     healthCheckPath: /api/dashboard/summary
     envVars:
       - key: DATABASE_URL
