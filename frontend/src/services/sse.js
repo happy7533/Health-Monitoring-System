@@ -4,8 +4,10 @@
  * ============================================================================
  */
 
+import { API_BASE_URL } from './api';
+
 export function subscribeToTelemetry(onTelemetry, onAlert, onStatus) {
-  const url = '/api/stream/telemetry';
+  const url = `${API_BASE_URL}/stream/telemetry`;
   const eventSource = new EventSource(url);
 
   eventSource.addEventListener('telemetry', (e) => {

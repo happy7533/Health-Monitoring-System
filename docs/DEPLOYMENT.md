@@ -118,3 +118,23 @@ volumes:
 1. Open `firmware/SafetyWearable_MQTT/SafetyWearable_MQTT.ino` in Arduino IDE.
 2. Configure Wi-Fi SSID/password and MQTT Broker IP.
 3. Select board `ESP32 Dev Module`, compile, and flash via USB.
+
+---
+
+## 4. Netlify Frontend + Render Backend
+
+The repository includes a root `netlify.toml` and `render.yaml` for the frontend and backend deployments. The Render Blueprint creates the Spring Boot web service and PostgreSQL database. The MQTT broker remains external; use a hosted broker such as HiveMQ Cloud and enter its connection details in Render.
+
+### Deploy the backend to Render
+
+1. Push this repository to GitHub and create a new Blueprint in the Render Dashboard using that repository and its root `render.yaml`.
+2. During Blueprint setup, provide `MQTT_BROKER_URL` (for example, the hosted broker's TLS URL), `MQTT_USERNAME`, `MQTT_PASSWORD`, and `CORS_ALLOWED_ORIGINS`. The CORS value must be the exact Netlify site origin, such as `https://your-site.netlify.app`; update it in the Render service environment after creating the Netlify site.
+3. Wait for the backend health check at `/api/dashboard/summary` to pass. Copy the service URL, for example `https://safety-wearable-api.onrender.com`.
+
+### Deploy the frontend to Netlify
+
+1. Create a Netlify site from the same GitHub repository. The root `netlify.toml` sets the build base to `frontend`, runs `npm run build`, publishes `dist`, and enables SPA routing.
+2. In the Netlify site environment variables, set `VITE_API_BASE_URL` to the Render URL plus `/api`, for example `https://safety-wearable-api.onrender.com/api`, then trigger a new deploy.
+3. Copy the Netlify site origin and set it as `CORS_ALLOWED_ORIGINS` in Render, then redeploy the backend.
+
+The free Render web service may sleep when idle, and the free Render PostgreSQL plan is temporary. Use paid plans for continuous availability and durable production data. Never commit database or MQTT credentials to the repository.
